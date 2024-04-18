@@ -401,8 +401,8 @@ class RADCUBE_DATASET_TIME(Dataset):
                 cfar_timestamps_and_paths = data_preparation.get_timestamps_and_paths(cfar_dir)
 
             # Get GPS
-            gps_topic= TopicIndex('gps_odom', rosDS_path)
-            gps_topic.load()
+            #gps_topic= TopicIndex('gps_odom', rosDS_path)
+            #gps_topic.load()
 
             for index in indices:
                 aux_data_dict[aux_array_index] = {}
@@ -432,7 +432,7 @@ class RADCUBE_DATASET_TIME(Dataset):
                 aux_data_dict[aux_array_index]["cam_timestamp"] = closest_cam_time
 
                 ## handle GPS
-                aux_data_dict[aux_array_index]["gps"] = gps_topic.get_temporally_closest_message(aux_data_dict[aux_array_index]["timestamp"]).data
+                #aux_data_dict[aux_array_index]["gps"] = gps_topic.get_temporally_closest_message(aux_data_dict[aux_array_index]["timestamp"]).data
 
 
                 ## handle CFAR

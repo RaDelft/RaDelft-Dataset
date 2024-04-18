@@ -25,9 +25,10 @@ from loaders.rad_cube_loader import RADCUBE_DATASET_TIME
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.callbacks import ModelCheckpoint
 import torchvision.models as models
+from utils.compute_metrics import compute_metrics_time, compute_pd_pfa
 
-OUT_CLASSES = 44  # 44 elevation angles
-IN_CHANNELS = 2  # Power Elevation Cube
+OUT_CLASSES = 1  # No elevation
+IN_CHANNELS = 128  # Use doppler dimension as channels not that there is no elevation
 
 # ToDO: Check if goes faster with this:
 torch.set_float32_matmul_precision('medium')
@@ -45,15 +46,15 @@ class RADPCNET(pl.LightningModule):
             arch, encoder_name=encoder_name, in_channels=in_channels, classes=out_classes, **kwargs
         )
 
-        kernel_size = (3, 5, 7)
+        kernel_size = (5, 5)
 
-        self.conv1 = nn.Conv3d(3, 6, kernel_size=kernel_size, padding='same')
+        self.conv1 = nn.Conv2d(3, 6, kernel_size=kernel_size, padding='same')
         self.relu1 = nn.ReLU()
-        self.conv2 = nn.Conv3d(6, 12, kernel_size=kernel_size, padding='same')
+        self.conv2 = nn.Conv2d(6, 12, kernel_size=kernel_size, padding='same')
         self.relu2 = nn.ReLU()
-        self.conv3 = nn.Conv3d(12, 6, kernel_size=kernel_size, padding='same')
+        self.conv3 = nn.Conv2d(12, 6, kernel_size=kernel_size, padding='same')
         self.relu3 = nn.ReLU()
-        self.conv4 = nn.Conv3d(6, 3, kernel_size=kernel_size, padding='same')
+        self.conv4 = nn.Conv2d(6, 3, kernel_size=kernel_size, padding='same')
 
         #self.model = models.video.r3d_18(pretrained=False, num_classes=out_classes)
         self.counter = 0
@@ -71,13 +72,13 @@ class RADPCNET(pl.LightningModule):
         image3 = image3.float()
 
         # Segmentation Model
-        mask1 = self.model(image1)
-        mask2 = self.model(image2)
-        mask3 = self.model(image3)
+        mask1 = torch.squeeze(self.model(image1))
+        mask2 = torch.squeeze(self.model(image2))
+        mask3 = torch.squeeze(self.model(image3))
 
-        mask = torch.stack([mask1, mask2, mask3], 4)
+        mask = torch.stack([mask1, mask2, mask3], 3)
 
-        mask = torch.permute(mask, [0, 4, 1, 2, 3])
+        mask = torch.permute(mask, [0, 3, 1, 2])
 
         # Temporal smoothing
         mask = self.conv1(mask)
@@ -92,23 +93,21 @@ class RADPCNET(pl.LightningModule):
 
     def shared_step(self, batch, stage):
         # Load input and GT
-        RAED_cube = batch[0]  # range azimuth elevation doppler cube, the input to the network
+        RAD_cube = batch[0]  # range azimuth  doppler cube, the input to the network
         gt_lidar_cube = batch[1] 
-        
-        # Remove the Doppler Dimension
-        RAE_cube = torch.mean(RAED_cube, dim=3)
+
 
         # Run the network
         occupancy_grid = self.forward(
-            RAE_cube)  # output is a binary dense mask of the cube in RAE format: range, azimuth, elevation
+            RAD_cube)  # output is a binary dense mask of the matrix in RA format: range, azimuth,
 
         loss = data_preparation.radarcube_lidarcube_loss_time(occupancy_grid, gt_lidar_cube, self.params)
 
         if stage == 'valid':
             radar_cube_out = occupancy_grid.sigmoid().squeeze().cpu().detach().numpy()
             radar_cube_out = radar_cube_out > 0.5
-            radar_cube_out = radar_cube_out[:, :, :, :-12, 8:-8]
-            pd, pfa = data_preparation.compute_pd_pfa(gt_lidar_cube.cpu().detach().numpy(), radar_cube_out)
+            radar_cube_out = radar_cube_out[:, :, :-12, 8:-8]
+            pd, pfa = compute_pd_pfa(gt_lidar_cube.cpu().detach().numpy(), radar_cube_out)
 
             return loss, pd, pfa
 
@@ -210,62 +209,6 @@ def generate_point_clouds(params):
                     np.save(save_path, radar_pc)
 
 
-def compute_metrics(params):
-    # Create Loader
-    transform = transforms.Compose([transforms.ToTensor()])
-    val_dataset = RADCUBE_DATASET_TIME(mode='test', transform=transform, params=params)
-
-    cfar_distance = 0
-    radar_distance = 0
-    count = 0
-    pd_cfar = 0
-    pd_radar = 0
-    pfa_cfar = 0
-    pfa_radar = 0
-    for dict in val_dataset.data_dict.values():
-        for t in dict.keys():
-            lidar = dict[t]['gt_path']
-            cfar = dict[t]['cfar_path']
-            network_output = cfar.replace('radar_ososos', 'network')
-
-            lidarpc = np.load(lidar)
-            #cfarpc = data_preparation.read_pointcloud(cfar, mode="radar")
-            #cfarpc = cfarpc[:,0:3]
-
-            radarpc = np.load(network_output)
-            radarpc[:, 1] = -radarpc[:, 1]
-
-            #cfar_distance = cfar_distance + data_preparation.compute_chamfer_distance(lidarpc,cfarpc)
-            radar_distance = radar_distance + data_preparation.compute_chamfer_distance(lidarpc, radarpc)
-
-            lidar_cube = data_preparation.lidarpc_to_lidarcube(lidarpc, params)
-            #cfar_cube = data_preparation.lidarpc_to_lidarcube(cfarpc,params)
-
-            radar_cube = data_preparation.lidarpc_to_lidarcube(radarpc, params)
-
-            #pd_cfar_aux, pfa_cfar_aux = data_preparation.compute_pd_pfa(lidar_cube, cfar_cube)
-            pd_radar_aux, pfa_radar_aux = data_preparation.compute_pd_pfa(lidar_cube, radar_cube)
-
-            #pd_cfar = pd_cfar + pd_cfar_aux
-            #pfa_cfar = pfa_cfar + pfa_cfar_aux
-            pd_radar = pd_radar + pd_radar_aux
-            pfa_radar = pfa_radar + pfa_radar_aux
-
-            count = count + 1
-
-            if count % 10 == 0:
-                print(str(count))
-
-    print('Pd CFAR: ' + str(pd_cfar / count))
-    print('Pd NET: ' + str(pd_radar / count))
-    print('----------')
-    print('Pfa CFAR: ' + str(pfa_cfar / count))
-    print('Pfa Net: ' + str(pfa_radar / count))
-    print('----------')
-    print('Distance CFAR: ' + str(cfar_distance / count))
-    print('Distance Net: ' + str(radar_distance / count))
-
-
 if __name__ == "__main__":
     params = data_preparation.get_default_params()
 
@@ -278,13 +221,14 @@ if __name__ == "__main__":
         params["use_npy_cubes"] = False
 
     params["train_test_split_percent"] = 0.8
-    params["bev"] = False
-    params["cfar_folder"] = 'radar_ososos'
+    #params["cfar_folder"] = 'radar_ososos'
+    params["quantile"] = False
+    params["bev"] = True
 
-    #main(params)
+    main(params)
     #generate_point_clouds(params)
 
-    compute_metrics(params)
+    #compute_metrics_time(params)
 
     # Dataset statistics
     '''
