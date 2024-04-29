@@ -14,13 +14,13 @@ elevationFFTsize = 128;
 % Path to the raw data
 % The current implementation process the scenes one by one.
 % Change the path if you want to process other scene
-rootFolder = '/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/Day2Experiment1/';
+rootFolder = 'PATH_TO_DATA/Day2Experiment1/';
 dataFolder = strcat(rootFolder, 'RawData/');
 
 % Path to save the radar cube
 rcFolder = strcat(rootFolder, 'RadarCubes/');
 if ~exist(rcFolder, 'dir')
-    %mkdir(rcFolder)
+    mkdir(rcFolder)
 end
 
 % Load the objects
