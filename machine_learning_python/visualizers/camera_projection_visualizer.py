@@ -233,7 +233,7 @@ def main():
 
     params["dataset_path"] = "/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/"
     params["train_val_scenes"] = [1, 3, 4, 5, 7]
-    params["test_scenes"] = [2, 6]
+    params["test_scenes"] = [2,6]
     params["use_npy_cubes"] = False
     params["bev"] = False
     params['label_smoothing'] = False
@@ -262,12 +262,12 @@ def main():
     fig.set_size_inches(18.5, 10.5)
 
     counter = 0
-    for dict in val_dataset.data_dict.values():
+    for paths_dict in val_dataset.data_dict.values():
 
-        cam = dict['cam_path']
-        lidar = dict['gt_path']
+        cam = paths_dict['cam_path']
+        lidar = paths_dict['gt_path']
         lidar = lidar.replace('rslidar_points_clean', 'rslidar_points')
-        cfar = dict['cfar_path']
+        cfar = paths_dict['cfar_path']
         radar = re.sub(r"radar_.+/", r"network/", cfar)
 
         if not os.path.isfile(radar):
@@ -332,6 +332,7 @@ def main():
 
         # RADAR
         radar_points = np.load(radar)
+        #radar_points = radar_points[:, :-1]
         pointcloud = radar_points.reshape(-1, 3)
         pointcloud[:, 1] = -pointcloud[:, 1]
 

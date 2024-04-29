@@ -18,6 +18,7 @@ import torchvision.transforms as transforms
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 from data_preparation import data_preparation
+from utils.compute_metrics import compute_metrics_time
 import torch.nn as nn
 from pytorch_lightning.callbacks import RichProgressBar
 import plotly.graph_objects as go
@@ -169,7 +170,7 @@ def main(params):
 def generate_point_clouds(params):
     # Load model
     #path = '../logs/lightning_logs/version_18/checkpoints/epoch=39-step=65520.ckpt'
-    path = 'lightning_logs/version_21/checkpoints/epoch=13-step=22932.ckpt'
+    path = 'lightning_logs/version_35/checkpoints/epoch=12-step=21294.ckpt'
     # NOTE file is not always readable, permissions can be fucked
     checkpoint = torch.load(path)
     model = RADPCNET("FPN", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
@@ -187,19 +188,16 @@ def generate_point_clouds(params):
     for batch in val_loader:
 
         radar_cube, lidar_cube, data_dict = batch
-        radar_cube = torch.mean(radar_cube, dim=3)
+        radar_cube_noDopp = torch.mean(radar_cube, dim=3)
         with torch.no_grad():
-            output = model(radar_cube)
+            output = model(radar_cube_noDopp)
             for i in range(lidar_cube.shape[0]):
                 for t in range(lidar_cube.shape[1]):
-                    #a, b = data_preparation.compute_pd_pfa(lidar_cube[0, :, :, :].cpu().numpy(), output[i, :, :, :])
 
                     output_t = output[i, t, :, :, :]
                     data_dict_t = data_dict[t]
 
-                    radar_pc = data_preparation.cube_to_pointcloud(output_t, params, radar_cube[i, t, :, :, :],
-                                                                   data_dict_t["elevation_path"][i], 'radar', False,
-                                                                   data_dict_t["power_path"][i], )
+                    radar_pc = data_preparation.cube_to_pointcloud(output_t, params, radar_cube[i, t, :, :, :],'radar')
 
                     radar_pc[:, 2] = -radar_pc[:, 2]
 
@@ -208,62 +206,6 @@ def generate_point_clouds(params):
                     print(save_path)
 
                     np.save(save_path, radar_pc)
-
-
-def compute_metrics(params):
-    # Create Loader
-    transform = transforms.Compose([transforms.ToTensor()])
-    val_dataset = RADCUBE_DATASET_TIME(mode='test', transform=transform, params=params)
-
-    cfar_distance = 0
-    radar_distance = 0
-    count = 0
-    pd_cfar = 0
-    pd_radar = 0
-    pfa_cfar = 0
-    pfa_radar = 0
-    for dict in val_dataset.data_dict.values():
-        for t in dict.keys():
-            lidar = dict[t]['gt_path']
-            cfar = dict[t]['cfar_path']
-            network_output = cfar.replace('radar_ososos', 'network')
-
-            lidarpc = np.load(lidar)
-            #cfarpc = data_preparation.read_pointcloud(cfar, mode="radar")
-            #cfarpc = cfarpc[:,0:3]
-
-            radarpc = np.load(network_output)
-            radarpc[:, 1] = -radarpc[:, 1]
-
-            #cfar_distance = cfar_distance + data_preparation.compute_chamfer_distance(lidarpc,cfarpc)
-            radar_distance = radar_distance + data_preparation.compute_chamfer_distance(lidarpc, radarpc)
-
-            lidar_cube = data_preparation.lidarpc_to_lidarcube(lidarpc, params)
-            #cfar_cube = data_preparation.lidarpc_to_lidarcube(cfarpc,params)
-
-            radar_cube = data_preparation.lidarpc_to_lidarcube(radarpc, params)
-
-            #pd_cfar_aux, pfa_cfar_aux = data_preparation.compute_pd_pfa(lidar_cube, cfar_cube)
-            pd_radar_aux, pfa_radar_aux = data_preparation.compute_pd_pfa(lidar_cube, radar_cube)
-
-            #pd_cfar = pd_cfar + pd_cfar_aux
-            #pfa_cfar = pfa_cfar + pfa_cfar_aux
-            pd_radar = pd_radar + pd_radar_aux
-            pfa_radar = pfa_radar + pfa_radar_aux
-
-            count = count + 1
-
-            if count % 10 == 0:
-                print(str(count))
-
-    print('Pd CFAR: ' + str(pd_cfar / count))
-    print('Pd NET: ' + str(pd_radar / count))
-    print('----------')
-    print('Pfa CFAR: ' + str(pfa_cfar / count))
-    print('Pfa Net: ' + str(pfa_radar / count))
-    print('----------')
-    print('Distance CFAR: ' + str(cfar_distance / count))
-    print('Distance Net: ' + str(radar_distance / count))
 
 
 if __name__ == "__main__":
@@ -279,12 +221,13 @@ if __name__ == "__main__":
 
     params["train_test_split_percent"] = 0.8
     params["bev"] = False
+    params["quantile"] = True
     params["cfar_folder"] = 'radar_ososos'
 
     #main(params)
     #generate_point_clouds(params)
 
-    compute_metrics(params)
+    compute_metrics_time(params)
 
     # Dataset statistics
     '''

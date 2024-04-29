@@ -24,7 +24,7 @@ from loaders.rad_cube_loader import RADCUBE_DATASET_TIME
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.callbacks import ModelCheckpoint
 import torchvision.models as models
-from utils.compute_metrics import compute_metrics_time
+from utils.compute_metrics import compute_metrics_time, compute_pd_pfa
 
 OUT_CLASSES = 44  # 44 elevation angles
 IN_CHANNELS = 64  # output of the ReduceDNet
@@ -177,42 +177,19 @@ class RADPCNET(pl.LightningModule):
             radar_cube_out = RAE_Cube.sigmoid().squeeze().cpu().detach().numpy()
             radar_cube_out = radar_cube_out > 0.5
             radar_cube_out = radar_cube_out[:, :, :, :-12, 8:-8]
-            pd, pfa = data_preparation.compute_pd_pfa(gt_lidar_cube.cpu().detach().numpy(), radar_cube_out)
+            pd, pfa = compute_pd_pfa(gt_lidar_cube.cpu().detach().numpy(), radar_cube_out)
 
             return loss, pd, pfa
 
         return loss
 
-    '''
-    def shared_epoch_end(self, outputs, stage):
-        # aggregate step metics
-        tp = torch.cat([x["tp"] for x in outputs])
-        fp = torch.cat([x["fp"] for x in outputs])
-        fn = torch.cat([x["fn"] for x in outputs])
-        tn = torch.cat([x["tn"] for x in outputs])
-
-        # per image IoU means that we first calculate IoU score for each image 
-        # and then compute mean over these scores
-        per_image_iou = smp.metrics.iou_score(tp, fp, fn, tn, reduction="micro-imagewise")
-
-        dataset_iou = smp.metrics.iou_score(tp, fp, fn, tn, reduction="micro")
-
-        metrics = {
-            f"{stage}_per_image_iou": per_image_iou,
-            f"{stage}_dataset_iou": dataset_iou,
-        }
-        self.log_dict(metrics, prog_bar=True)
-    '''
 
     def training_step(self, batch, batch_idx):
         loss = self.shared_step(batch, "train")
         self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True, batch_size=4)
         return loss
 
-    '''
-    def on_training_epoch_end(self):
-        return self.shared_epoch_end(self.training_step_outputs, "train")
-'''
+
 
     def validation_step(self, batch, batch_idx):
         loss, pd, pfa = self.shared_step(batch, "valid")
@@ -223,19 +200,11 @@ class RADPCNET(pl.LightningModule):
         # self.log('val_loss', loss, 'val_pd', pd, 'val_pfa', pfa, prog_bar=True, batch_size=4)
         return loss
 
-    '''
-    def on_validation_epoch_end(self):
-        print('\n')
-        return self.shared_epoch_end(self.validation_step_outputs, "valid")
-'''
+
 
     def test_step(self, batch, batch_idx):
         return self.shared_step(batch, "test")
 
-    '''
-    def test_epoch_end(self, outputs):
-        return self.shared_epoch_end(outputs, "test")
-'''
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
@@ -258,11 +227,6 @@ def main(params):
     val_loader = DataLoader(val_dataset, batch_size=2, shuffle=False, num_workers=num_workers, pin_memory=False)
     model = RADPCNET("FPN", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
 
-    #path = 'lightning_logs/version_44/checkpoints/epoch=4-step=8190.ckpt'
-    # path = 'lightning_logs/version_6/checkpoints/epoch=27-step=69328.ckpt'
-    # NOTE file is not always readable, permissions can be fucked
-    #checkpoint = torch.load(path)
-    #model.load_state_dict(checkpoint['state_dict'])
 
     checkpoint_callback = ModelCheckpoint(monitor="val_loss")
 
@@ -280,10 +244,9 @@ def main(params):
 
 def generate_point_clouds(params):
     # Load model
-    path = 'lightning_logs/version_17/checkpoints/epoch=22-step=37674.ckpt'
-    # NOTE file is not always readable, permissions can be fucked
+    path = 'lightning_logs/version_10/checkpoints/epoch=15-step=26208.ckpt'
     checkpoint = torch.load(path)
-    model = RADPCNET("deeplabv3plus", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
+    model = RADPCNET("FPN", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
     model.load_state_dict(checkpoint['state_dict'])
     model.eval()
 
@@ -303,13 +266,11 @@ def generate_point_clouds(params):
             output = model(radar_cube)
             for i in range(lidar_cube.shape[0]):
                 for t in range(lidar_cube.shape[1]):
-                    #a, b = data_preparation.compute_pd_pfa(lidar_cube[0, :, :, :].cpu().numpy(), output[i, :, :, :])
 
                     output_t = output[i, t, :, :, :]
                     data_dict_t = data_dict[t]
 
-                    radar_pc = data_preparation.cube_to_pointcloud(output_t, params, radar_cube[i, t, :, :, :],
-                                                                   data_dict_t["elevation_path"][i], 'radar', False,data_dict_t["dop_fold_path"][i])
+                    radar_pc = data_preparation.cube_to_pointcloud(output_t, params, radar_cube[i, t, :, :, :],'radar')
 
                     radar_pc[:, 2] = -radar_pc[:, 2]
 
@@ -342,13 +303,13 @@ if __name__ == "__main__":
 
     params["train_test_split_percent"] = 0.8
     params["bev"] = False
+    params["quantile"] = False
     params["cfar_folder"] = 'radar_ososos'
 
     #params["quantile"] = True
     #main(params)
-    generate_point_clouds(params)
+    #generate_point_clouds(params)
 
-    #params['label_smoothing'] = False
     compute_metrics_time(params)
 
     # Dataset statistics

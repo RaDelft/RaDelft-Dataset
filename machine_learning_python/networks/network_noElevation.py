@@ -168,7 +168,7 @@ def main(params):
 def generate_point_clouds(params):
     # Load model
     #path = '../logs/lightning_logs/version_18/checkpoints/epoch=39-step=65520.ckpt'
-    path = 'lightning_logs/version_21/checkpoints/epoch=13-step=22932.ckpt'
+    path = 'lightning_logs/version_36/checkpoints/epoch=13-step=22932.ckpt'
     # NOTE file is not always readable, permissions can be fucked
     checkpoint = torch.load(path)
     model = RADPCNET("FPN", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
@@ -186,19 +186,15 @@ def generate_point_clouds(params):
     for batch in val_loader:
 
         radar_cube, lidar_cube, data_dict = batch
-        radar_cube = torch.mean(radar_cube, dim=3)
         with torch.no_grad():
             output = model(radar_cube)
             for i in range(lidar_cube.shape[0]):
                 for t in range(lidar_cube.shape[1]):
-                    #a, b = data_preparation.compute_pd_pfa(lidar_cube[0, :, :, :].cpu().numpy(), output[i, :, :, :])
 
-                    output_t = output[i, t, :, :, :]
+                    output_t = output[i, t, :, :]
                     data_dict_t = data_dict[t]
 
-                    radar_pc = data_preparation.cube_to_pointcloud(output_t, params, radar_cube[i, t, :, :, :],
-                                                                   data_dict_t["elevation_path"][i], 'radar', False,
-                                                                   data_dict_t["power_path"][i], )
+                    radar_pc = data_preparation.cube_to_pointcloud(output_t, params, radar_cube[i, t, :, :],'radar')
 
                     radar_pc[:, 2] = -radar_pc[:, 2]
 
@@ -221,14 +217,14 @@ if __name__ == "__main__":
         params["use_npy_cubes"] = False
 
     params["train_test_split_percent"] = 0.8
-    #params["cfar_folder"] = 'radar_ososos'
+    params["cfar_folder"] = 'radar_ososos2D'
     params["quantile"] = False
     params["bev"] = True
 
-    main(params)
+    #main(params)
     #generate_point_clouds(params)
 
-    #compute_metrics_time(params)
+    compute_metrics_time(params)
 
     # Dataset statistics
     '''
