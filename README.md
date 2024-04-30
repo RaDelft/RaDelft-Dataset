@@ -2,6 +2,13 @@
 
 This repository shares the documentation for the RaDelf dataset as well as the code for reproducing the results of [1].
 
+<div align="center">
+<p float="center">
+<img src="docs/figures/exampleVideo.gif" alt="Example video" width="400"/>
+<br />
+<b>Example video from our dataset, with the camera on top, lidar on the right and the point cloud from [1]</b>
+</p>
+</div>
 
 ## Overview
 - [Introduction](#introduction)
