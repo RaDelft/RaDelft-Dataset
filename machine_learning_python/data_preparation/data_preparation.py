@@ -452,7 +452,7 @@ def prepare_lidar_pointcloud(lidar_point_cloud, params):
 
 
     # Remove ground points
-    lidar_point_cloud, _ = remove_ground_points_patchwork(lidar_point_cloud, method="patchwork")
+    lidar_point_cloud, _ = remove_ground_points_patchwork(lidar_point_cloud)
     lidar_point_cloud = lidar_point_cloud[:, 0:3]
     lidar_point_cloud = lidar_point_cloud[lidar_point_cloud[:, 2] > -2]
 

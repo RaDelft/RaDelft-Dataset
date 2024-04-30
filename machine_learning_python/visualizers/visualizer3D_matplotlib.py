@@ -10,9 +10,7 @@ if __name__ == "__main__":
     params["dataset_path"] = "/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/"
     params["train_val_scenes"] = [1, 3, 4, 5, 7]
     params["test_scenes"] = [6]
-    params["use_npy_cubes"] = False
     params["bev"] = False
-    params['label_smoothing'] = False
     params["cfar_folder"] = 'radar_ososos'
 
     val_dataset = RADCUBE_DATASET(mode='test',  params=params)
