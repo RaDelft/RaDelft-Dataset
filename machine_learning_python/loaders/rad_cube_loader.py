@@ -11,146 +11,17 @@ from data_preparation import data_preparation
 import numpy as np
 from loaders.TopicLoader import TopicIndex
 
-class RADCUBE_DATASET_SINGLE(Dataset):
-    def __init__(self, training=True, transform=None, params=None):
+class RADCUBE_DATASET(Dataset):
+    """
+    Data Loader for the RaDelf dataset. It initialises a dictionary with the paths to the files of the radar
+    camera and lidar.
+    This is the version for single frame as input, no temporal information.
 
-        self.input_dir = params["radar_cubes"]
-        # self.gt_dir = params["ROS_DS_Path"] + "/rslidar_points"
-        self.gt_dir = params["ROS_DS_Path"] + "/rslidar_points_clean"
-        self.frame_num_to_timestamp_path = self.input_dir + "/timestamps.mat"
-        self.cam_dir = params["ROS_DS_Path"] + "/ueye_left_image_rect_color"
-        self.train_test_split_percent = params["train_test_split_percent"]
-        self.params = params
-
-        # files are named as ELE_Frame_xxx and Pow_Frame_xxx. Lets get all files that matches these
-
-        all_files = os.listdir(self.input_dir)
-        # elevation_files = [file for file in all_files if "Ele_Frame" in file]
-        power_files = [file for file in all_files if "Pow_Frame" in file]
-
-        # assert len(elevation_files) == len(power_files)
-
-        # get the list of numbers from the filenames bor both
-        # elevation_numbers = [int(file.split("_")[-1].split(".")[0]) for file in elevation_files]
-        power_numbers = [int(file.split("_")[-1].split(".")[0]) for file in power_files]
-
-        # check if the numbers are the same
-        # assert elevation_numbers.sort() == power_numbers.sort()
-
-        power_numbers.sort()
-        indices = power_numbers.copy()
-        total_num_samples = len(indices)
-
-        # split the indices into train and test
-        train_indices = indices[:int(len(indices) * self.train_test_split_percent)]
-        test_indices = indices[int(len(indices) * self.train_test_split_percent):]
-
-        if training:  # if training, use train indices, else use test indices
-            indices = train_indices
-            # indices = indices[:100]  # TODO
-        else:
-            indices = test_indices
-            # indices = indices[:24]
-
-        # get timestamp mapping
-        frame_num_to_timestamp = scipy.io.loadmat(self.frame_num_to_timestamp_path)
-        frame_num_to_timestamp = frame_num_to_timestamp["unixDateTime"]  # TODO these are floats, a big no
-
-        # get lidar timestamps
-        lidar_timestamps_and_paths = data_preparation.get_timestamps_and_paths(self.gt_dir)
-        camera_timestamps_and_paths = data_preparation.get_timestamps_and_paths(self.cam_dir)
-
-        # make a dictionary, indices are keys, elevation, power, and gt_paths are values
-        self.data_dict = {}
-        array_index = 0
-        for index in indices:
-            # ToDo: Check this with ANDRAS! The validation dataset was starting at 2000 and then it broke on getItem(0)
-            # array_index = index - np.min(indices)
-            self.data_dict[array_index] = {}
-
-            ## handle radar
-            self.data_dict[array_index]["elevation_path"] = os.path.join(self.input_dir,
-                                                                         "Ele_Frame_" + str(index) + ".mat")
-            self.data_dict[array_index]["power_path"] = os.path.join(self.input_dir, "Pow_Frame_" + str(index) + ".mat")
-
-            # self.data_dict[array_index]["timestamp"] = frame_num_to_timestamp[array_index][0] * 10 ** 9
-            self.data_dict[array_index]["timestamp"] = (frame_num_to_timestamp[index - 1][0]) * 10 ** 9
-            self.data_dict[array_index]["numpy_cube_path"] = os.path.join(self.input_dir,
-                                                                          "radar_cube_" + str(index) + ".npy")
-            ## handle LiDAR
-            closest_lidar_time = data_preparation.closest_timestamp(self.data_dict[array_index]["timestamp"],
-                                                                    lidar_timestamps_and_paths)
-            self.data_dict[array_index]["gt_path"] = lidar_timestamps_and_paths[closest_lidar_time]
-            self.data_dict[array_index]["gt_timestamp"] = closest_lidar_time
-
-            ## handle camera
-            closest_cam_time = data_preparation.closest_timestamp(self.data_dict[array_index]["timestamp"],
-                                                                  camera_timestamps_and_paths)
-            self.data_dict[array_index]["cam_path"] = camera_timestamps_and_paths[closest_cam_time]
-            self.data_dict[array_index]["cam_timestamp"] = closest_cam_time
-
-            array_index = array_index + 1
-
-        # print division line
-        print("--------------------------------------------------")
-
-        # print split percent
-        print("Train test split percent: ", self.train_test_split_percent)
-        # print train_indices and test_indices length
-        print("Train indices length: ", len(train_indices))
-        print("Test indices length: ", len(test_indices))
-        print("Total number of samples: ", total_num_samples)
-
-        if training:
-            version = "Training"
-        else:
-            version = "Testing"
-
-        print(version + " dataset loaded with " + str(len(self.data_dict)) + " samples")
-
-        # print division line
-        print("--------------------------------------------------")
-
-    def __len__(self):
-        return len(self.data_dict)
-
-    def __getitem__(self, idx):
-
-        # load elevation and power
-        # elevation = scipy.io.loadmat(self.data_dict[idx]["elevation_path"])["elevationIndex"]
-
-        # elevation = elevation.astype(np.single)
-        # print(np.sum(np.isnan(elevation)))
-        # elevation = np.nan_to_num(elevation, nan=22.0)
-        # elevation = (elevation - np.mean(elevation)) / np.std(elevation)
-
-        power = scipy.io.loadmat(self.data_dict[idx]["power_path"])["radarCube"]
-        # ToDo: Check this. Does it make sense to do it here?
-        power = power.astype(np.single)
-        power = (power - np.mean(power)) / np.std(power)
-
-        # combine them into a single cube with 2 channels
-        input_cube = power
-        # print(np.mean(input_cube), np.std(input_cube))
-        # load gt
-        gt_cloud = data_preparation.read_pointcloud(self.data_dict[idx]["gt_path"], mode="rs_lidar_clean")
-
-        item_params = self.data_dict[idx]  # this is a dictionary with all the paths and timestamps
-
-        gt_cube = data_preparation.lidarpc_to_lidarcube(gt_cloud, self.params)
-
-        # ToDo: check with Andras, the cube size has to be dividable by 32 for the network. Should we modify the NN?
-        zero_pad = np.zeros([12, 128, 240], dtype='single')
-        input_cube = np.concatenate([input_cube, zero_pad])
-        zero_pad = np.zeros([512, 128, 8], dtype='single')
-        input_cube = np.concatenate([zero_pad, input_cube, zero_pad], 2)
-        input_cube = np.transpose(input_cube, (1, 0, 2))  # (C, H, W)
-        input_cube = np.expand_dims(input_cube, axis=0)
-        return input_cube, gt_cube, item_params
-
-
-class RADCUBE_DATASET_MULTI(Dataset):
-    def __init__(self, mode='train', transform=None, params=None):
+    Attributes:
+        mode: train, val or test
+        params: a dictionary with the parameters defined in data_preparation.py
+    """
+    def __init__(self, mode='train', params=None):
 
         if mode != 'train' and mode != 'val' and mode != 'test':
             raise ValueError("mode should be either train, val or test")
@@ -170,8 +41,12 @@ class RADCUBE_DATASET_MULTI(Dataset):
         # make a dictionary, indices are keys, elevation, power, and gt_paths are values
         self.data_dict = {}
         global_array_index = 0
+        # IMPORTANT: It is assumed that the folders structure is as given in the dataset. If the folder
+        # structure is changed this will not work.
         for scene_number in scene_set:
 
+            # Here it is assumed the folders structure is as given in the dataset.
+            # If modified, this lines have to be changed, specially "Day2Experiment" "and RadarCubes"
             scene_dir = self.dataset_path + '/Day2Experiment' + str(scene_number)
             cubes_dir = scene_dir + '/RadarCubes'
             all_files = os.listdir(cubes_dir)
@@ -181,7 +56,6 @@ class RADCUBE_DATASET_MULTI(Dataset):
             power_numbers.sort()
             indices = power_numbers.copy()
             indices = np.array(indices)
-            total_num_samples = len(indices)
 
             # if train: Take 9 indices and skip one. 90% training in the train_val dataset
             if mode == 'train':
@@ -203,12 +77,10 @@ class RADCUBE_DATASET_MULTI(Dataset):
 
             # if test we keep all the indices
 
-            #indices = indices[1000:1400]
-
             # get timestamp mapping
             timestamps_path = cubes_dir + '/timestamps.mat'
             frame_num_to_timestamp = scipy.io.loadmat(timestamps_path)
-            frame_num_to_timestamp = frame_num_to_timestamp["unixDateTime"]  # TODO these are floats, a big no
+            frame_num_to_timestamp = frame_num_to_timestamp["unixDateTime"]
 
             rosDS_path = scene_dir + '/rosDS'
             lidar_path = rosDS_path + '/rslidar_points_clean'
@@ -270,12 +142,6 @@ class RADCUBE_DATASET_MULTI(Dataset):
     def __getitem__(self, idx):
 
         # load elevation and power
-        # elevation = scipy.io.loadmat(self.data_dict[idx]["elevation_path"])["elevationIndex"]
-
-        # elevation = elevation.astype(np.single)
-        # print(np.sum(np.isnan(elevation)))
-        # elevation = np.nan_to_num(elevation, nan=22.0)
-        # elevation = (elevation - np.mean(elevation)) / np.std(elevation)
         if not self.params['bev']:
             elevation = scipy.io.loadmat(self.data_dict[idx]["elevation_path"])["elevationIndex"]
             elevation = elevation.astype(np.single)
@@ -283,7 +149,6 @@ class RADCUBE_DATASET_MULTI(Dataset):
             elevation = elevation / 44
 
         power = scipy.io.loadmat(self.data_dict[idx]["power_path"])["radarCube"]
-        # ToDo: Check this. Does it make sense to do it here?
         power = power.astype(np.single)
         # Hardcoded maximum value after data exploration
         power = power / 8998.5576
@@ -316,7 +181,16 @@ class RADCUBE_DATASET_MULTI(Dataset):
 
 
 class RADCUBE_DATASET_TIME(Dataset):
-    def __init__(self, mode='train', transform=None, params=None):
+    """
+      Data Loader for the RaDelf dataset. It initialises a dictionary with the paths to the files of the radar
+      camera and lidar.
+      This is the version for multi frame as input, with temporal information.
+
+      Attributes:
+          mode: train, val or test
+          params: a dictionary with the parameters defined in data_preparation.py
+      """
+    def __init__(self, mode='train', params=None):
 
         if mode != 'train' and mode != 'val' and mode != 'test':
             raise ValueError("mode should be either train, val or test")
@@ -340,6 +214,9 @@ class RADCUBE_DATASET_TIME(Dataset):
         global_array_index = 0
         aux_data_dict = {}
         aux_array_index = 0
+
+        # IMPORTANT: It is assumed that the folders structure is as given in the dataset. If the folder
+        # structure is changed this will not work.
         for scene_number in scene_set:
 
             scene_dir = self.dataset_path + '/Day2Experiment' + str(scene_number)
@@ -482,7 +359,7 @@ class RADCUBE_DATASET_TIME(Dataset):
                 elevation = elevation / 44
 
             power = scipy.io.loadmat(self.data_dict[idx][index]["power_path"])["radarCube"]
-            # ToDo: Check this. Does it make sense to do it here?
+
             power = power.astype(np.single)
             # Hardcoded maximum value after data exploration
             power = power / 8998.5576

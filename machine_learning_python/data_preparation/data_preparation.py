@@ -550,7 +550,7 @@ def get_default_params():
         np.int32)  # calculate the size of the grid/pixels
 
     # Path to the dataset
-    ROS_DS_Path = '/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/Day2Experiment1/rosDS/'
+    dataset_path = 'PATH_TO_DATASET'
 
     # Radar Cube axes
     # Range Axis
@@ -580,7 +580,7 @@ def get_default_params():
     params = {'voxel_size': voxel_size,
               'grid_range': grid_range,
               'grid_size': grid_size,
-              'ROS_DS_Path': ROS_DS_Path,
+              'dataset_path': dataset_path,
               'range_axis': range_axis,
               'azimuth_axis': azimuth_axis,
               'elevation_axis': elevation_axis,

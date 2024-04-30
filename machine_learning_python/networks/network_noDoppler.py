@@ -8,24 +8,20 @@ import sys
 
 # apend the absolute path of the parent directory
 sys.path.append(sys.path[0] + "/..")
-import scipy.io
+
 import re
-import os
 import torch
 import pytorch_lightning as pl
 import segmentation_models_pytorch as smp
-import torchvision.transforms as transforms
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 from data_preparation import data_preparation
-from utils.compute_metrics import compute_metrics_time
+from utils.compute_metrics import compute_metrics_time, compute_pd_pfa
 import torch.nn as nn
 from pytorch_lightning.callbacks import RichProgressBar
-import plotly.graph_objects as go
 from loaders.rad_cube_loader import RADCUBE_DATASET_TIME
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.callbacks import ModelCheckpoint
-import torchvision.models as models
 
 OUT_CLASSES = 44  # 44 elevation angles
 IN_CHANNELS = 2  # Power Elevation Cube
@@ -34,7 +30,10 @@ IN_CHANNELS = 2  # Power Elevation Cube
 torch.set_float32_matmul_precision('medium')
 
 
-class RADPCNET(pl.LightningModule):
+'''
+There is no DopplerEncoder Network since there is no Doppler information.
+'''
+class NeuralNetworkRadarDetector(pl.LightningModule):
 
     def __init__(self, arch, encoder_name, params, in_channels, out_classes, **kwargs):
         super().__init__()
@@ -109,7 +108,7 @@ class RADPCNET(pl.LightningModule):
             radar_cube_out = occupancy_grid.sigmoid().squeeze().cpu().detach().numpy()
             radar_cube_out = radar_cube_out > 0.5
             radar_cube_out = radar_cube_out[:, :, :, :-12, 8:-8]
-            pd, pfa = data_preparation.compute_pd_pfa(gt_lidar_cube.cpu().detach().numpy(), radar_cube_out)
+            pd, pfa = compute_pd_pfa(gt_lidar_cube.cpu().detach().numpy(), radar_cube_out)
 
             return loss, pd, pfa
 
@@ -126,7 +125,6 @@ class RADPCNET(pl.LightningModule):
         self.log_dict({'val_loss': loss, 'val_pd': pd, 'val_pfa': pfa, }, on_step=False, on_epoch=True, prog_bar=True,
                       logger=True, batch_size=4)
 
-        # self.log('val_loss', loss, 'val_pd', pd, 'val_pfa', pfa, prog_bar=True, batch_size=4)
         return loss
 
     def test_step(self, batch, batch_idx):
@@ -141,17 +139,16 @@ class RADPCNET(pl.LightningModule):
 
 # main function
 def main(params):
-    transform = transforms.Compose([transforms.ToTensor()])
 
     # Create training and validation datasets
-    train_dataset = RADCUBE_DATASET_TIME(mode='train', transform=transform, params=params)
-    val_dataset = RADCUBE_DATASET_TIME(mode='val', transform=transform, params=params)
+    train_dataset = RADCUBE_DATASET_TIME(mode='train', params=params)
+    val_dataset = RADCUBE_DATASET_TIME(mode='val', params=params)
 
     # Create training and validation data loaders
     num_workers = 8
     train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=num_workers, pin_memory=False)
     val_loader = DataLoader(val_dataset, batch_size=2, shuffle=False, num_workers=num_workers, pin_memory=False)
-    model = RADPCNET("FPN", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
+    model = NeuralNetworkRadarDetector("FPN", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
 
     checkpoint_callback = ModelCheckpoint(monitor="val_loss")
 
@@ -169,17 +166,15 @@ def main(params):
 
 def generate_point_clouds(params):
     # Load model
-    #path = '../logs/lightning_logs/version_18/checkpoints/epoch=39-step=65520.ckpt'
     path = 'lightning_logs/version_35/checkpoints/epoch=12-step=21294.ckpt'
     # NOTE file is not always readable, permissions can be fucked
     checkpoint = torch.load(path)
-    model = RADPCNET("FPN", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
+    model = NeuralNetworkRadarDetector("FPN", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
     model.load_state_dict(checkpoint['state_dict'])
     model.eval()
 
     # Create Loader
-    transform = transforms.Compose([transforms.ToTensor()])
-    val_dataset = RADCUBE_DATASET_TIME(mode='test', transform=transform, params=params)
+    val_dataset = RADCUBE_DATASET_TIME(mode='test',  params=params)
 
     # Create training and validation data loaders
     num_workers = 16
@@ -211,41 +206,20 @@ def generate_point_clouds(params):
 if __name__ == "__main__":
     params = data_preparation.get_default_params()
 
-    if os.path.exists("/home/iroldan"):
-        params["ROS_DS_Path"] = "/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/Day2Experiment1/rosDS"
-        params["radar_cubes"] = "/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/Day2Experiment1/RadarCubes"
-        params["dataset_path"] = "/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/"
-        params["train_val_scenes"] = [1, 3, 4, 5, 7]
-        params["test_scenes"] = [2, 6]
-        params["use_npy_cubes"] = False
-
+    # Initialise parameters
+    params["dataset_path"] = "PATH_TO_DATASET"
+    params["train_val_scenes"] = [1, 3, 4, 5, 7]
+    params["test_scenes"] = [2, 6]
     params["train_test_split_percent"] = 0.8
-    params["bev"] = False
-    params["quantile"] = True
     params["cfar_folder"] = 'radar_ososos'
+    params["bev"] = False
+    params["quantile"] = False
 
-    #main(params)
-    #generate_point_clouds(params)
+    # This train the NN
+    main(params)
 
-    compute_metrics_time(params)
+    # This generate the poincloud from the trained NN
+    # generate_point_clouds(params)
 
-    # Dataset statistics
-    '''
-    start_time = time.time()
-    dataset = RADCUBE_DATASET_MULTI(mode='train', transform=None, params=params)
-    data_loader = DataLoader(dataset, batch_size=8, shuffle=False, num_workers=16)
-
-    sparseness = torch.zeros(len(data_loader))
-    count = 0
-    for batch in data_loader:
-        _, lidar_cube, _ = batch
-
-        n_zeros = torch.sum(lidar_cube == 0)
-
-        sparseness[count] = (n_zeros / (lidar_cube.size()[0] *lidar_cube.size()[1] * lidar_cube.size()[2] * lidar_cube.size()[3]))
-        count = count + 1
-
-    mean_sparness = torch.mean(sparseness)
-    print('MEAN SPARNESS: ' + str(mean_sparness))
-    print('TIME: ' + str(time.time() - start_time))
-    '''
+    # This compute the Pd, Pfa and Chamfer distance
+    # compute_metrics(params)

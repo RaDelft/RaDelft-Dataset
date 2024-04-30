@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy.lib.recfunctions as rf
 from data_preparation import data_preparation
 import torchvision.transforms as transforms
-from loaders.rad_cube_loader import RADCUBE_DATASET_MULTI
+from loaders.rad_cube_loader import RADCUBE_DATASET
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import re
@@ -240,7 +240,7 @@ def main():
     params["cfar_folder"] = 'radar_ososos'
 
     transform = transforms.Compose([transforms.ToTensor()])
-    val_dataset = RADCUBE_DATASET_MULTI(mode='test', transform=transform, params=params)
+    val_dataset = RADCUBE_DATASET(mode='test', transform=transform, params=params)
 
     camera_projection_matrix, T_camera_lidar = get_sensor_transforms()
     # Example usage
