@@ -16,8 +16,7 @@ if __name__ == "__main__":
     params['label_smoothing'] = False
     params["cfar_folder"] = 'radar_ososos2D'
 
-    transform = transforms.Compose([transforms.ToTensor()])
-    val_dataset = RADCUBE_DATASET(mode='test', transform=transform, params=params)
+    val_dataset = RADCUBE_DATASET(mode='test', params=params)
     count = 1
 
     for paths_dict in val_dataset.data_dict.values():

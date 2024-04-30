@@ -1,10 +1,8 @@
 from loaders.rad_cube_loader import RADCUBE_DATASET
 from data_preparation import data_preparation
-import torchvision.transforms as transforms
 import re
 import matplotlib.pyplot as plt
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
 
 if __name__ == "__main__":
     params = data_preparation.get_default_params()
@@ -17,8 +15,7 @@ if __name__ == "__main__":
     params['label_smoothing'] = False
     params["cfar_folder"] = 'radar_ososos'
 
-    transform = transforms.Compose([transforms.ToTensor()])
-    val_dataset = RADCUBE_DATASET(mode='test', transform=transform, params=params)
+    val_dataset = RADCUBE_DATASET(mode='test',  params=params)
     count = 1
 
     for paths_dict in val_dataset.data_dict.values():
