@@ -1,4 +1,4 @@
-# Radar Delft Dataset
+# RaDelft Dataset
 
 This repository shares the documentation for the RaDelf dataset as well as the code for reproducing the results of [1].
 
