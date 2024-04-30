@@ -40,7 +40,7 @@ All sensors were jointly calibrated. See the figure below for a general overview
 
 <div align="center">
 <p float="center">
-<img src="docs/figures/car2.png" alt="Example video" width="600"/>
+<img src="docs/figures/car2.png" alt="Example video" width="300"/>
 </p>
 </div>
 
@@ -54,14 +54,14 @@ The dataset is made freely available for non-commertial reaseach purposes only. 
 Coming soon
 ## Examples and Demos
 ---
-# 1_frame_loader - Frame Loader
+### 1_frame_loader - Frame Loader
 
-# 2_3D_visualization - 3D Visualization
+### 2_3D_visualization - 3D Visualization
 This example notebook shows how to load the plot the 3D point clouds of the lidar and radar with the NN detector.
 
 [Link To the Jupyter Notebook](https://github.com/IgnacioRoldan/RaDelft-Dataset/blob/main/machine_learning_python/examples/2_3DVisualiser.ipynb)
 
-# 2_camera_projection - Point clouds projected on camera
+### 3_camera_projection - Point clouds projected on camera
 ---
 ## Neural Network
 Coming soon
