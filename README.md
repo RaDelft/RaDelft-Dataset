@@ -1,4 +1,6 @@
-<img src="docs/figures/logo.png" align="center" width="40%">
+<p align="center">
+  <img src = "./docs/imgs/logo.png" width="60%">
+</p>
 
 # RaDelft Dataset
 
