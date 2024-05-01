@@ -1,4 +1,4 @@
-from loaders.rad_cube_loader import RADCUBE_DATASET_MULTI
+from loaders.rad_cube_loader import RADCUBE_DATASET
 from data_preparation import data_preparation
 import torchvision.transforms as transforms
 import os
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     params["cfar_folder"] = 'radar_ososos'
 
     transform = transforms.Compose([transforms.ToTensor()])
-    val_dataset = RADCUBE_DATASET_MULTI(mode='test', transform=transform, params=params)
+    val_dataset = RADCUBE_DATASET(mode='test', transform=transform, params=params)
     count = 1
     #fig = go.FigureWidget()
     app = dash.Dash()

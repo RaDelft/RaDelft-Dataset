@@ -1,5 +1,4 @@
-# Radar Delft Dataset
-<img src="docs/figures/ms3_logo_text_crop-removebg-preview.png" align="right" width="20%">
+# RaDelft Dataset
 
 This repository shares the documentation for the RaDelf dataset as well as the code for reproducing the results of [1].
 
@@ -7,7 +6,7 @@ This repository shares the documentation for the RaDelf dataset as well as the c
 <p float="center">
 <img src="docs/figures/exampleVideo.gif" alt="Example video" width="600"/>
 <br />
-<b>Example video from our dataset, with the camera on top, lidar on the right and the point cloud from [1]</b>
+<b>Example video from our dataset, with the camera on top, lidar on the right and the point cloud from [1] on the left.</b>
 </p>
 </div>
 
@@ -30,7 +29,6 @@ This repository shares the documentation for the RaDelf dataset as well as the c
 The RaDelft dataset is a large-scale, real-life multi-sensor dataset recorded in various driving scenarios. It provides radar data in different processing levels, synchronised with lidar, camera and odometry.
 
 ## Sensors and data
-
 The output of the next sensors have been recorded:
 
 - A texas instruments MIMO radar board MMWCAS-RF-EVM mounted on the roof.
@@ -42,8 +40,7 @@ All sensors were jointly calibrated. See the figure below for a general overview
 
 <div align="center">
 <p float="center">
-<img src="docs/figures/car2.png" alt="" width="600"/>
-<br />
+<img src="docs/figures/car2.png" alt="Example video" width="300"/>
 </p>
 </div>
 
@@ -56,7 +53,19 @@ The dataset is made freely available for non-commertial reaseach purposes only. 
 ## Getting Started
 Coming soon
 ## Examples and Demos
-Coming soon
+---
+### 1_frame_loader - Frame Loader
+This example shows how to generate the dataloader for the single and multiframe versions.
+
+[Link To the Jupyter Notebook](https://github.com/IgnacioRoldan/RaDelft-Dataset/blob/main/machine_learning_python/examples/1_frame_loader.ipynb)
+
+### 2_3d_visualization - 3D Visualization
+This example notebook shows how to load the plot the 3D point clouds of the lidar and radar with the NN detector.
+
+[Link To the Jupyter Notebook](https://github.com/IgnacioRoldan/RaDelft-Dataset/blob/main/machine_learning_python/examples/2_3DVisualiser.ipynb)
+
+### 3_camera_projection - Point clouds projected on camera
+---
 ## Neural Network
 Coming soon
 ## License
