@@ -1,5 +1,5 @@
 # RaDelft Dataset
-
+<img src="docs/figures/ms3_logo_text_crop-removebg-preview.png" align="right" width="20%">
 This repository shares the documentation for the RaDelf dataset as well as the code for reproducing the results of [1].
 
 <div align="center">
