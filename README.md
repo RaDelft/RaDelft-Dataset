@@ -1,4 +1,4 @@
-<img src="docs/figures/ms3_logo_text_crop-removebg-preview.png" align="right" width="20%">
+<img src="docs/figures/logo.png" align="center" width="40%">
 
 # RaDelft Dataset
 
