@@ -1,5 +1,5 @@
 <p align="center">
-  <img src = "./docs/imgs/logo.png" width="60%">
+  <img src = "docs/figures/logo.png" width="60%">
 </p>
 
 # RaDelft Dataset
