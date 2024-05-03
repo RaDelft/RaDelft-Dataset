@@ -48,9 +48,6 @@ All sensors were jointly calibrated. See the figure below for a general overview
 </p>
 </div>
 
-## Annotation
-Coming soon
-
 ## Access
 The dataset is made freely available for non-commercial research purposes only. Eligibility to use the dataset is limited to Master- and PhD-students, and staff of academic and non-profit research institutions. The dataset is hosted in 4TU.ResearchData:
 
@@ -86,6 +83,12 @@ This example notebook shows how to load the plot the 3D point clouds of the lida
 
 ### 3_camera_projection - Point clouds projected on camera
 ---
+
+
+## Annotation
+> [!NOTE]  
+> Labeling of the data is being made to enable classification and segmentation algorithms. Labels will be released in the following updates.
+
 ## Neural Network
 Coming soon
 ## License
