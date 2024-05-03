@@ -52,7 +52,23 @@ All sensors were jointly calibrated. See the figure below for a general overview
 Coming soon
 
 ## Access
-The dataset is made freely available for non-commertial reaseach purposes only. Eligiblity to use the dataset is limited to Master- and PhD- students, and staff of academic and non-profit research institutions.
+The dataset is made freely available for non-commercial research purposes only. Eligibility to use the dataset is limited to Master- and PhD-students, and staff of academic and non-profit research institutions. The dataset is hosted in 4TU.ResearchData:
+
+> [!NOTE]  
+> Link coming soon.
+
+By requesting access, the researcher agrees to use and handle the data according to the license.
+
+After validating the researcher’s association to a research institue, we will send an email containing password protected download link(s) of the RaDelft dataset. Sharing these links and/or the passwords is strictly forbidden (see licence).
+
+In case of questions of problems, please send an email to i.roldanmontero at tudelft.nl.
+
+
+Frequently asked questions about the license:
+
+Q: Is it possible for MSc and PhD students to use the dataset if they work/cooperate with a for-profit organization?
+A: The current VoD license permits the use of the VoD dataset of a MS/PhD student on the compute facilities (storing, processing) of his/her academic institution for research towards his/her degree - even if this MS/PhD student is (also) employed by a company.
+The license does not permit the use of the VoD dataset on the compute facilities (storing, processing) of a for-profit organization.
 
 ## Getting Started
 Coming soon
