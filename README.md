@@ -93,7 +93,7 @@ This example notebook shows how to load the plot the 3D point clouds of the lida
 
 ## License
 * The development kit is realeased under the Apache License, Version 2.0, see [here](LICENSE.txt).
-* The dataset can be used by accepting the [Research Use License](https://data.4tu.n).
+* The dataset can be used by accepting the [Research Use License](https://data.4tu.nl).
 
 ## Citation
 Coming soon
