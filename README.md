@@ -17,12 +17,14 @@ This repository shares the documentation for the RaDelf dataset as well as the c
 ## Overview
 - [Introduction](#introduction)
 - [Sensors and Data](#sensors-and-data)
-- [Annotation](#annotation)
+
 - [Access](#access)
 - [Getting Started](#getting-started)
 - [Examples and Demo](#examples-and-demos)
+- [Annotation](#annotation)
+- [License] (#license)
 - [Citation](#citation)
-- [Original paper](NOT YET)
+- [Original paper](Coming Soon)
 - [Links](#links)
 
 
@@ -89,13 +91,10 @@ This example notebook shows how to load the plot the 3D point clouds of the lida
 > [!NOTE]  
 > Labeling of the data is being made to enable classification and segmentation algorithms. Labels will be released in the following updates.
 
-## Neural Network
-Coming soon
 ## License
 * The development kit is realeased under the Apache License, Version 2.0, see [here](LICENSE.txt).
 * The dataset can be used by accepting the [Research Use License](https://data.4tu.n).
-<br>
-<br>
+
 ## Citation
 Coming soon
 ## Links
