@@ -22,7 +22,7 @@ This repository shares the documentation for the RaDelf dataset as well as the c
 - [Getting Started](#getting-started)
 - [Examples and Demo](#examples-and-demos)
 - [Annotation](#annotation)
-- [License] (#license)
+- [License](#license)
 - [Citation](#citation)
 - [Original paper](Coming Soon)
 - [Links](#links)
