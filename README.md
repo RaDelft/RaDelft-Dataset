@@ -58,16 +58,17 @@ The dataset is made freely available for non-commercial research purposes only. 
 
 By requesting access, the researcher agrees to use and handle the data according to the license.
 
-After validating the researcher’s association to a research institue, we will send an email containing password protected download link(s) of the RaDelft dataset. Sharing these links and/or the passwords is strictly forbidden (see licence).
+After validating the researcher’s association with a research institute, we will send an email containing password-protected download link(s) of the RaDelft dataset. Sharing these links and/or passwords is strictly forbidden (see license).
 
-In case of questions of problems, please send an email to i.roldanmontero at tudelft.nl.
+In case of questions or problems, please send an email to i.roldanmontero at tudelft.nl.
 
 
 Frequently asked questions about the license:
 
 Q: Is it possible for MSc and PhD students to use the dataset if they work/cooperate with a for-profit organization?
-A: The current VoD license permits the use of the VoD dataset of a MS/PhD student on the compute facilities (storing, processing) of his/her academic institution for research towards his/her degree - even if this MS/PhD student is (also) employed by a company.
-The license does not permit the use of the VoD dataset on the compute facilities (storing, processing) of a for-profit organization.
+
+A: The current VoD license permits the use of the VoD dataset of an MS/PhD student on the compute facilities (storing, processing) of his/her academic institution for research towards his/her degree - even if this MS/PhD student is (also) employed by a company.
+The license does not permit the use of the VoD dataset in the computing facilities (storage, processing) of a for-profit organization.
 
 ## Getting Started
 Coming soon
@@ -79,9 +80,9 @@ This example shows how to generate the dataloader for the single and multiframe 
 [Link To the Jupyter Notebook](https://github.com/IgnacioRoldan/RaDelft-Dataset/blob/main/machine_learning_python/examples/1_frame_loader.ipynb)
 
 ### 2_3d_visualization - 3D Visualization
-This example notebook shows how to load the plot the 3D point clouds of the lidar and radar with the NN detector.
+This example notebook shows how to load the plot of the 3D point clouds of the lidar and radar with the NN detector.
 
-[Link To the Jupyter Notebook](https://github.com/IgnacioRoldan/RaDelft-Dataset/blob/main/machine_learning_python/examples/2_3DVisualiser.ipynb)
+[Link To the Jupyter Notebook](https://github.com/IgnacioRoldan/RaDelft-Dataset/blob/main/machine_learning_python/examples/2_3d_visualiser.ipynb)
 
 ### 3_camera_projection - Point clouds projected on camera
 ---
