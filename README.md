@@ -56,7 +56,7 @@ The dataset is made freely available for non-commercial research purposes only. 
 [Link to request access](https://docs.google.com/forms/d/1whyNTiAsZ4l0ENwFiut4yb3FzF3yPjKCdH42OMTlaEk/)
 
 > [!NOTE]  
-> Link coming soon.
+> The dataset will be available by the end of May.
 
 By requesting access, the researcher agrees to use and handle the data according to the license.
 
