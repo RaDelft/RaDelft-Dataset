@@ -53,6 +53,8 @@ All sensors were jointly calibrated. See the figure below for a general overview
 ## Access
 The dataset is made freely available for non-commercial research purposes only. Eligibility to use the dataset is limited to Master- and PhD-students, and staff of academic and non-profit research institutions. The dataset is hosted in 4TU.ResearchData:
 
+[Link to request access](https://docs.google.com/forms/d/1whyNTiAsZ4l0ENwFiut4yb3FzF3yPjKCdH42OMTlaEk/)
+
 > [!NOTE]  
 > Link coming soon.
 
@@ -94,7 +96,7 @@ This example notebook shows how to load the plot of the 3D point clouds of the l
 
 ## License
 * The development kit is realeased under the Apache License, Version 2.0, see [here](LICENSE.txt).
-* The dataset can be used by accepting the [Research Use License](https://data.4tu.nl).
+* The dataset can be used by accepting the [Research Use License](LICENSE.md).
 
 ## Citation
 Coming soon
