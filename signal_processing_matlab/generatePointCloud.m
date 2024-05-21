@@ -36,7 +36,7 @@ parfor frame=1:size(files,1)
     fileNamePow = strcat(folder, 'Pow_Frame_', num2str(frame),'.mat');
     radarCube = load(fileNamePow).radarCube;
 
-    if active2D
+    if ~active2D
         fileNameEle = strcat(folder, 'Ele_Frame_', num2str(frame),'.mat');        
         eleCube = load(fileNameEle).elevationIndex;
     end
