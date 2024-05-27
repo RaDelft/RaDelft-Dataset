@@ -3,16 +3,16 @@
 The protection of your personal data has a high priority at Delft University of Technology. Personal data includes any information relating to an identified or identifiable natural person. With this data protection information, we inform you about the type, scope and purpose of collected personal data at Delft University of Technology in connection with the RaDelft dataset and how we deal with this data. In addition, you will learn about your rights regarding the processing of your personal data. The following information applies to all natural persons whose personal data are saved and processed in connection with the RaDelft dataset.
  
 ## 1. Who is responsible for processing my data and who can I contact with regards to data protection?
-Responsible for the processing of personal data related to the RaDelft dataset is the following:
-Microwave Sensing, Signals and Systems (MS3) Group
-Department of Microelectronics
-Faculty of Electrical Engineering, Mathematics and Computer Science (EWI)
-Delft University of Technology
-Mekelweg 4, 2628 CD Delft, The Netherlands
-The contact information of the Data Protection Officer at Delft University of Technology is the following:
-Data Protection Officer
-Delft University of Technology
-2628 CD Delft, The Netherlands
+Responsible for the processing of personal data related to the RaDelft dataset is the following: \
+Microwave Sensing, Signals and Systems (MS3) Group \
+Department of Microelectronics \
+Faculty of Electrical Engineering, Mathematics and Computer Science (EWI) \
+Delft University of Technology \
+Mekelweg 4, 2628 CD Delft, The Netherlands \
+The contact information of the Data Protection Officer at Delft University of Technology is the following: \
+Data Protection Officer \
+Delft University of Technology \
+2628 CD Delft, The Netherlands \
  
 ## 2. Where is my data derived from and which data is processed?
 In accordance with the data protection principles, personal data (“data”) is only to be processed to the extent the data is required and allowed due to applicable legal requirements or due to legal obligations. Unless otherwise specified by the following, the terms “process” and “processing” comprise particularly the collection, the usage, storage, disclosure and transfer of personal data (see Article 4 Nr. 2 of the EU Data Protection Regulation).
