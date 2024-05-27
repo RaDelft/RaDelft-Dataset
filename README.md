@@ -46,7 +46,7 @@ All sensors were jointly calibrated. See the figure below for a general overview
 
 <div align="center">
 <p float="center">
-<img src="docs/figures/car2.png" alt="Example video" width="300"/>
+<img src="docs/figures/car2.jpg" alt="Example video" width="300"/>
 </p>
 </div>
 
