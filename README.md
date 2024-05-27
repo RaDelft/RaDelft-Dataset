@@ -66,10 +66,10 @@ In case of questions of problems, please send an email to i.roldanmontero at tud
 
 **Frequently asked questions about the license:**
 
-Q: Is it possible for MSc and PhD students to use the dataset if they work/cooperate with a for-profit organization?
+**Q**: Is it possible for MSc and PhD students to use the dataset if they work/cooperate with a for-profit organization?
 
-A: The current VoD license permits the use of the VoD dataset of an MS/PhD student on the compute facilities (storing, processing) of his/her academic institution for research towards his/her degree - even if this MS/PhD student is (also) employed by a company.
-The license does not permit the use of the VoD dataset in the computing facilities (storage, processing) of a for-profit organization.
+**A**: The current VoD license **permits** the use of the VoD dataset of an MS/PhD student on the compute facilities (storing, processing) of his/her academic institution for research towards his/her degree - even if this MS/PhD student is (also) employed by a company.
+The license **does not permit** the use of the VoD dataset in the computing facilities (storage, processing) of a for-profit organization.
 
 ## Getting Started
 Coming soon
