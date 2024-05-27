@@ -1,5 +1,5 @@
 # Privacy Statement
-# DATA PRIVACY
+## DATA PRIVACY
 The protection of your personal data has a high priority at Delft University of Technology. Personal data includes any information relating to an identified or identifiable natural person. With this data protection information, we inform you about the type, scope and purpose of collected personal data at Delft University of Technology in connection with the RaDelft dataset and how we deal with this data. In addition, you will learn about your rights regarding the processing of your personal data. The following information applies to all natural persons whose personal data are saved and processed in connection with the RaDelft dataset.
  
 ## 1. Who is responsible for processing my data and who can I contact with regards to data protection?
