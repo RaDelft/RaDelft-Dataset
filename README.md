@@ -86,6 +86,9 @@ This example notebook shows how to load the plot of the 3D point clouds of the l
 
 
 ## Point Clouds
+Only the point clouds for scenes 2 and 5 are provided for the network since scenes 1,3,4,6, and 7 are used for training. If the network-generated point clouds are needed for the training scenes, the network can be retrained by calling the main method of network_time.py and then called* generate_point_clouds* setting *params["test_scenes"]* equal to  [1,2,3,4,5,6,7]
+
+
 > [!WARNING]  
 > Velocity saved in the point clouds does not use the maximum Doppler unambiguous algorithm. To use the extension, all the Doppler cubes must be generated, which will take up too much space in the data repository. To generate the matrices, the file *generateRadarCubeFFTs.m* can be run with the saveDopplerFold parameter equal to 1. Then, the path to the Doppler folder can be passed in the *cube_to_pointcloud* function in *data_preparation.py*. Moreover, the current algorithm for unambiguous Doppler extension is only valid when a single target occurs in a range-Doppler cell.
 
