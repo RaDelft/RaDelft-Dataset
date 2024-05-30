@@ -23,7 +23,7 @@ elevationAxis = asin(wz_vec/(2*pi*0.4972));
 
 % Paths
 % The current implementation process the captures scene by scene
-folder = '/PATH_TO_DATA/Day2Experiment2/RadarCubes/';
+folder = '/PATH_TO_DATA/Scene2/RadarCubes/';
 files = dir(fullfile(folder,'Pow_Frame*.mat'));
 
 active2D = 1; % 1 means 2D version, all elevation=0; 0 means 3D, use elevation
@@ -70,7 +70,7 @@ parfor frame=1:size(files,1)
 end
 %% ROS DS Generation
 load(strcat(folder,'timestamps.mat'));
-saveFolder ='/PATH_TO_SAVE_DIR/Day2Experiment2/rosDS/radar_ososos2D/';
+saveFolder ='/PATH_TO_SAVE_DIR/Scene2/rosDS/radar_ososos2D/';
 
 
 if ~exist(saveFolder, 'dir')
