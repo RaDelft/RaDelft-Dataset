@@ -19,8 +19,7 @@ This repository shares the documentation for the RaDelf dataset as well as the c
 - [Sensors and Data](#sensors-and-data)
 
 - [Access](#access)
-- [Getting Started](#getting-started)
-- [Examples and Demo](#examples-and-demos)
+- [Getting Started](#getting-started-examples-and-demos)
 - [Annotation](#annotation)
 - [License](#license)
 - [Citation](#citation)
@@ -71,9 +70,7 @@ In case of questions of problems, please send an email to i.roldanmontero at tud
 **A**: The current VoD license **permits** the use of the VoD dataset of an MS/PhD student on the compute facilities (storing, processing) of his/her academic institution for research towards his/her degree - even if this MS/PhD student is (also) employed by a company.
 The license **does not permit** the use of the VoD dataset in the computing facilities (storage, processing) of a for-profit organization.
 
-## Getting Started
-Coming soon
-## Examples and Demos
+## Getting Started: Examples and Demos
 ---
 ### 1_frame_loader - Frame Loader
 This example shows how to generate the dataloader for the single and multiframe versions.
@@ -88,6 +85,9 @@ This example notebook shows how to load the plot of the 3D point clouds of the l
 ### 3_camera_projection - Point clouds projected on camera
 ---
 
+## Point Clouds
+> [!WARNING]  
+> Speed saved in the point clouds does not use the maximum Doppler unambiguous algorithm. To use it, all the Doppler cubes must be generated, which will take up too much space in the data repository. To generate the matrices, the file *generateRadarCubeFFTs.m* can be run with the saveDopplerFold parameter equal to 1. Then, in the *cube_to_pointcloud* function in *data_preparation.py*, the path to the Doppler folder can be passed.
 
 ## Annotation
 > [!NOTE]  
