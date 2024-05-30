@@ -46,8 +46,8 @@ class RADCUBE_DATASET(Dataset):
         for scene_number in scene_set:
 
             # Here it is assumed the folders structure is as given in the dataset.
-            # If modified, this lines have to be changed, specially "Day2Experiment" "and RadarCubes"
-            scene_dir = self.dataset_path + '/Day2Experiment' + str(scene_number)
+            # If modified, this lines have to be changed, specially "Scene" "and RadarCubes"
+            scene_dir = self.dataset_path + '/Scene' + str(scene_number)
             cubes_dir = scene_dir + '/RadarCubes'
             all_files = os.listdir(cubes_dir)
             power_files = [file for file in all_files if "Pow_Frame" in file]
@@ -219,7 +219,7 @@ class RADCUBE_DATASET_TIME(Dataset):
         # structure is changed this will not work.
         for scene_number in scene_set:
 
-            scene_dir = self.dataset_path + '/Day2Experiment' + str(scene_number)
+            scene_dir = self.dataset_path + '/Scene' + str(scene_number)
             cubes_dir = scene_dir + '/RadarCubes'
             all_files = os.listdir(cubes_dir)
             power_files = [file for file in all_files if "Pow_Frame" in file]
