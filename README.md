@@ -71,7 +71,7 @@ In case of questions of problems, please send an email to i.roldanmontero at tud
 The license **does not permit** the use of the VoD dataset in the computing facilities (storage, processing) of a for-profit organization.
 
 ## Getting Started: Examples and Demos
----
+
 ### 1_frame_loader - Frame Loader
 This example shows how to generate the dataloader for the single and multiframe versions.
 
@@ -83,11 +83,11 @@ This example notebook shows how to load the plot of the 3D point clouds of the l
 [Link To the Jupyter Notebook](https://github.com/IgnacioRoldan/RaDelft-Dataset/blob/main/machine_learning_python/examples/2_3d_visualiser.ipynb)
 
 ### 3_camera_projection - Point clouds projected on camera
----
+
 
 ## Point Clouds
 > [!WARNING]  
-> Speed saved in the point clouds does not use the maximum Doppler unambiguous algorithm. To use it, all the Doppler cubes must be generated, which will take up too much space in the data repository. To generate the matrices, the file *generateRadarCubeFFTs.m* can be run with the saveDopplerFold parameter equal to 1. Then, in the *cube_to_pointcloud* function in *data_preparation.py*, the path to the Doppler folder can be passed.
+> Velocity saved in the point clouds does not use the maximum Doppler unambiguous algorithm. To use the extension, all the Doppler cubes must be generated, which will take up too much space in the data repository. To generate the matrices, the file *generateRadarCubeFFTs.m* can be run with the saveDopplerFold parameter equal to 1. Then, the path to the Doppler folder can be passed in the *cube_to_pointcloud* function in *data_preparation.py*. Moreover, the current algorithm for unambiguous Doppler extension is only valid when a single target occurs in a range-Doppler cell.
 
 ## Annotation
 > [!NOTE]  
