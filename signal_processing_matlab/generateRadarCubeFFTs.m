@@ -14,7 +14,7 @@ elevationFFTsize = 128;
 % Path to the raw data
 % The current implementation process the scenes one by one.
 % Change the path if you want to process other scene
-rootFolder = 'PATH_TO_DATA/Day2Experiment1/';
+rootFolder = 'PATH_TO_DATA/Scene1/';
 dataFolder = strcat(rootFolder, 'RawData/');
 
 % Path to save the radar cube
