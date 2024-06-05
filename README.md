@@ -53,9 +53,6 @@ The dataset is made freely available for non-commercial research purposes only. 
 
 [Link to request access](https://docs.google.com/forms/d/1whyNTiAsZ4l0ENwFiut4yb3FzF3yPjKCdH42OMTlaEk/)
 
-> [!NOTE]  
-> The dataset will be available by the end of May.
-
 By requesting access, the researcher agrees to use and handle the data according to the [license](LICENSE.md). See furthermore our [privacy statement](docs/privacy.md).
 
 After validating the researcher’s association to a research institue, we will send an email containing password protected download link(s) of the RaDelft dataset. Sharing these links and/or the passwords is strictly forbidden (see licence).
