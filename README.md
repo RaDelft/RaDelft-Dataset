@@ -97,4 +97,6 @@ Only the point clouds for scenes 2 and 6 are provided for the network since scen
 * The dataset can be used by accepting the [Research Use License](LICENSE.md).
 
 ## Citation
-Coming soon
+> [!WARNING]  
+>  The paper explaining in detail all the content of the repository is under review at IEEE Transactions on Radar Systems. The pre-print can be found at:
+> https://arxiv.org/abs/2406.04723
