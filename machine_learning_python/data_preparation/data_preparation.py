@@ -6,7 +6,10 @@ import scipy.io
 import torch
 import segmentation_models_pytorch as smp
 import torch.nn.functional as F
-import pypatchworkpp
+
+# How to install Patchwork++
+# https://github.com/url-kaist/patchwork-plusplus
+#import pypatchworkpp
 
 os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 

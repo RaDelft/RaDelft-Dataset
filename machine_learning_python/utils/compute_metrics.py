@@ -1,4 +1,3 @@
-import torchvision.transforms as transforms
 import numpy as np
 from data_preparation import data_preparation
 from loaders.rad_cube_loader import RADCUBE_DATASET_TIME, RADCUBE_DATASET
