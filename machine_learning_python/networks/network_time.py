@@ -19,7 +19,6 @@ import numpy as np
 from data_preparation import data_preparation
 import torch.nn as nn
 from pytorch_lightning.callbacks import RichProgressBar
-import plotly.graph_objects as go
 from loaders.rad_cube_loader import RADCUBE_DATASET_TIME
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -263,8 +262,10 @@ if __name__ == "__main__":
     params["test_scenes"] = [2, 6]
     params["train_test_split_percent"] = 0.8
     params["cfar_folder"] = 'radar_ososos'
-    params["bev"] = True
     params["quantile"] = False
+
+    # This must be kept to false. If the network without elevation is needed, use network_noElevation.py instead
+    params["bev"] = False
 
     # This train the NN
     main(params)

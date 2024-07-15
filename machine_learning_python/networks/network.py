@@ -212,11 +212,13 @@ if __name__ == "__main__":
     # Initialise parameters
     params["dataset_path"] = "PATH_TO_DATASET"
     params["train_val_scenes"] = [1, 3, 4, 5, 7]
-    params["test_scenes"] = [2, 6]
+    params["test_scenes"] = [2,6]
     params["train_test_split_percent"] = 0.8
     params["cfar_folder"] = 'radar_ososos'
-    params["bev"] = False
     params["quantile"] = False
+
+    # This must be kept to false. If the network without elevation is needed, use network_noElevation.py instead
+    params["bev"] = False
 
     # This train the NN
     main(params)

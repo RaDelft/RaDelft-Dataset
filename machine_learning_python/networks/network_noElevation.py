@@ -20,7 +20,6 @@ import numpy as np
 from data_preparation import data_preparation
 import torch.nn as nn
 from pytorch_lightning.callbacks import RichProgressBar
-import plotly.graph_objects as go
 from loaders.rad_cube_loader import RADCUBE_DATASET_TIME
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.callbacks import ModelCheckpoint
