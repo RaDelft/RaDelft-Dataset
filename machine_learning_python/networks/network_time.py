@@ -25,7 +25,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 import torchvision.models as models
 from utils.compute_metrics import compute_metrics_time, compute_pd_pfa
 
-OUT_CLASSES = 44  # 44 elevation angles
+OUT_CLASSES = 34  # 44 elevation angles
 IN_CHANNELS = 64  # output of the ReduceDNet
 
 # ToDO: Check if goes faster with this:
@@ -160,7 +160,10 @@ class NeuralNetworkRadarDetector(pl.LightningModule):
         if stage == 'valid':
             radar_cube_out = RAE_Cube.sigmoid().squeeze().cpu().detach().numpy()
             radar_cube_out = radar_cube_out > 0.5
-            radar_cube_out = radar_cube_out[:, :, :, :-12, 8:-8]
+            if radar_cube_out.ndim == 5:
+                radar_cube_out = radar_cube_out[:, :, :, :-12, 8:-8]
+            else:
+                radar_cube_out = radar_cube_out[:, :, :-12, 8:-8]
             pd, pfa = compute_pd_pfa(gt_lidar_cube.cpu().detach().numpy(), radar_cube_out)
 
             return loss, pd, pfa
@@ -206,7 +209,7 @@ def main(params):
 
     trainer = pl.Trainer(
         accelerator="gpu",
-        max_epochs=60,
+        max_epochs=20,
         callbacks=[checkpoint_callback, RichProgressBar(leave=True, theme=RichProgressBarTheme(metrics_format='.4e'))],
     )
     trainer.fit(
@@ -218,7 +221,7 @@ def main(params):
 
 def generate_point_clouds(params):
     # Load model
-    path = 'lightning_logs/version_10/checkpoints/epoch=15-step=26208.ckpt'
+    path = '../lightning_logs/epoch=15-step=30752.ckpt'
     checkpoint = torch.load(path)
     model = NeuralNetworkRadarDetector("FPN", "resnet18", params, in_channels=IN_CHANNELS, out_classes=OUT_CLASSES)
     model.load_state_dict(checkpoint['state_dict'])
@@ -257,9 +260,9 @@ if __name__ == "__main__":
     params = data_preparation.get_default_params()
 
     # Initialise parameters
-    params["dataset_path"] = "PATH_TO_DATASET"
-    params["train_val_scenes"] = [1, 3, 4, 5, 7]
-    params["test_scenes"] = [2, 6]
+    params["dataset_path"] = 'PATH_TO_DATASET'
+    params["train_val_scenes"] = [1,3,4,5,7]
+    params["test_scenes"] = [2,6]
     params["train_test_split_percent"] = 0.8
     params["cfar_folder"] = 'radar_ososos'
     params["quantile"] = False
@@ -268,10 +271,10 @@ if __name__ == "__main__":
     params["bev"] = False
 
     # This train the NN
-    main(params)
+    # main(params)
 
     # This generate the poincloud from the trained NN
-    # generate_point_clouds(params)
+    generate_point_clouds(params)
 
     # This compute the Pd, Pfa and Chamfer distance
-    # compute_metrics(params)
+    compute_metrics_time(params)

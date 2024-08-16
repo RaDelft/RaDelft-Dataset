@@ -14,7 +14,7 @@ elevationFFTsize = 128;
 % Path to the raw data
 % The current implementation process the scenes one by one.
 % Change the path if you want to process other scene
-rootFolder = 'PATH_TO_DATA/Scene1/';
+rootFolder = '/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/Scene1_RawData/Scene1/';
 dataFolder = strcat(rootFolder, 'RawData/');
 
 % Path to save the radar cube
@@ -38,6 +38,7 @@ globalFrameCounter = 1;
 for i_file = 1:(length(fileIdx_unique))
 
 
+
     % Get File Names for the Master, Slave1, Slave2, Slave3
     fileNameStruct = getBinFileNames_withIdx(dataFolder, fileIdx_unique{i_file});
 
@@ -52,6 +53,10 @@ for i_file = 1:(length(fileIdx_unique))
     % Process Data Frame by Frame
     % Intentionally skip the first frame due to TDA2
     for nFrame= 2:numValidFrames
+
+        if (globalFrameCounter + nFrame -2) < 2207
+            continue
+        end
 
         fprintf('START FRAME PROCESSING: %d \n', nFrame)
 
@@ -103,7 +108,7 @@ for i_file = 1:(length(fileIdx_unique))
         
         % This is to get +-20 degrees. Only valid with the current FFT size
         % Only valid with the current FFT size
-        radarCube = radarCube(:,:,:,43:86);
+        radarCube = radarCube(:,:,:,48:81);
         radarCube = abs(radarCube);        
 
         % Find the peak in elevation and save the index

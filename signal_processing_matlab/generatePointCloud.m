@@ -18,7 +18,7 @@ azimuthAxis = asin(wx_vec/(2*pi*0.4972));
 eleFFTSize = 128;
 wz_vec=-pi:2*pi/(eleFFTSize-1):pi;
 wz_vec = flip(wz_vec);
-wz_vec = wz_vec(43:86);
+wz_vec = wz_vec(43:81);
 elevationAxis = asin(wz_vec/(2*pi*0.4972));
 
 % Paths

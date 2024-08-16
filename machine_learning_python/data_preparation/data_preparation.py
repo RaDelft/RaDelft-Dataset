@@ -544,7 +544,7 @@ def get_default_params():
     ### some predefined parameters ###
     voxel_size = np.asarray([0.2, 0.2, 0.2])
     grid_range = np.asarray([0, -40, -3, 50, +40, 4])  # size of the grid in meters
-    roi_spherical = np.asarray([0, -70, -20, 50, 70, 20])  # range azimuth elevation [min max]
+    roi_spherical = np.asarray([0, -70, -15, 50, 70, 15])  # range azimuth elevation [min max]
     x_offset = 0
     y_offset = 0
     azimuth_offset = 7
@@ -571,7 +571,7 @@ def get_default_params():
     # Elevation Axis
     ele_fft_size = 128
     wz_vec = np.linspace(-np.pi, np.pi, ele_fft_size)
-    wz_vec = wz_vec[42:86]
+    wz_vec = wz_vec[47:81]
     elevation_axis = np.arcsin(wz_vec / (2 * np.pi * 0.4972))
 
     # Vel Axis
@@ -604,6 +604,7 @@ def get_default_params():
 
 # main function
 if __name__ == '__main__':
+
     # Convert CFAR mat to npy
     #path = '/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/Day2Experiment2/rosDS/radar_ososos/'
     #convert_pointcloud_from_mat_to_npy(path)
@@ -611,9 +612,10 @@ if __name__ == '__main__':
     #convert_pointcloud_from_mat_to_npy(path)
     #path = '/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/Day2Experiment2/rosDS/radar_ososos2D/'
     #convert_pointcloud_from_mat_to_npy(path)
-    # Clean Lidar Points
+
 
     '''
+    # Clean Lidar Points
     path = '/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/Day2Experiment1/rosDS/'
     clean_and_save_lidar(path)
     print("FINISH 1 clean")    

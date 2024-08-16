@@ -23,7 +23,7 @@ from loaders.rad_cube_loader import RADCUBE_DATASET_TIME
 from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTheme
 from pytorch_lightning.callbacks import ModelCheckpoint
 
-OUT_CLASSES = 44  # 44 elevation angles
+OUT_CLASSES = 34  # 44 elevation angles
 IN_CHANNELS = 2  # Power Elevation Cube
 
 # ToDO: Check if goes faster with this:

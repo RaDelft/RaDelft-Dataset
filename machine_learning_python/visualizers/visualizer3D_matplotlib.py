@@ -7,9 +7,9 @@ import numpy as np
 if __name__ == "__main__":
     params = data_preparation.get_default_params()
 
-    params["dataset_path"] = "/media/iroldan/179bc4e0-0daa-4d2d-9271-25c19bcfd403/"
+    params["dataset_path"] = "PATH_TO_DATASET"
     params["train_val_scenes"] = [1, 3, 4, 5, 7]
-    params["test_scenes"] = [6]
+    params["test_scenes"] = [2,6]
     params["bev"] = False
     params["cfar_folder"] = 'radar_ososos'
 
@@ -25,25 +25,14 @@ if __name__ == "__main__":
         # Load Lidar
         lidar_pc = np.load(lidar)
         lidar_pc[:, 1] = -lidar_pc[:, 1]
-        #lidar_cube = data_preparation.lidarpc_to_lidarcube(lidar_pc, None)
-        #lidar_cube = torch.from_numpy(lidar_cube)
-        lidar_pc = data_preparation.transform_point_cloud(lidar_pc, [0, 0, params['azimuth_offset']],
-                                                          [-params['x_offset'] / 100, -params['y_offset'] / 100,
-                                                           0])
 
-        #lidar_pc_low = data_preparation.cube_to_pointcloud(lidar_cube, None, None, None, mode='lidar')
 
         # Load CFAR
         # cfar_pc = data_preparation.read_pointcloud(cfar, mode="radar")
 
         # Load NN detector
         radar_pc = np.load(radar)
-        #radar_pc[:, 1] = -radar_pc[:, 1]
 
-        radar_pc = data_preparation.transform_point_cloud(radar_pc, [0, 0, params['azimuth_offset']],
-                                                          [-params['x_offset'] / 100, -params['y_offset'] / 100,
-                                                           0])
-        #radar_pc[:, 1] = -radar_pc[:, 1]
         # Trim for plotting
         radar_pc = radar_pc[radar_pc[:, 1] > -30, :]
         radar_pc = radar_pc[radar_pc[:, 1] < 30, :]
@@ -53,7 +42,6 @@ if __name__ == "__main__":
         lidar_pc = lidar_pc[lidar_pc[:, 2] < 10, :]
         radar_pc = radar_pc[radar_pc[:, 2] > -1, :]
         lidar_pc = lidar_pc[lidar_pc[:, 2] > -1, :]
-
 
 
         layout = [

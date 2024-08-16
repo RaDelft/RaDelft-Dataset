@@ -34,7 +34,8 @@ def compute_metrics(params):
         cfar = dataset_dict['cfar_path']
         network_output = cfar.replace('radar_ososos', 'network')
         radarpc = np.load(network_output)
-        radarpc = radarpc[:, :-1]  # Remove speed to compute metrics
+        if radarpc.shape[1] == 4:
+            radarpc = radarpc[:, :-1]  # Remove speed to compute metrics
         radarpc[:, 1] = -radarpc[:, 1]
 
         # Compute Metrics
@@ -96,14 +97,16 @@ def compute_metrics_time(params):
             # Generate lidar_cube
             lidar = dataset_dict[t]['gt_path']
             lidarpc = np.load(lidar)
+            lidarpc[:, 1] = -lidarpc[:, 1]
+
             lidar_cube = data_preparation.lidarpc_to_lidarcube(lidarpc, params)
 
             # Load radar point clouds
             cfar = dataset_dict[t]['cfar_path']
             network_output = cfar.replace('radar_ososos', 'network')
             radarpc = np.load(network_output)
-            radarpc = radarpc[:, :-1]           #Remove speed to compute metrics
-            radarpc[:, 1] = -radarpc[:, 1]
+            if radarpc.shape[1] == 4:
+                radarpc = radarpc[:, :-1]           #Remove speed to compute metrics
 
             # Compute Metrics
             radar_distance = radar_distance + compute_chamfer_distance(lidarpc, radarpc)

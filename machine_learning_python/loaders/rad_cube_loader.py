@@ -145,8 +145,8 @@ class RADCUBE_DATASET(Dataset):
         if not self.params['bev']:
             elevation = scipy.io.loadmat(self.data_dict[idx]["elevation_path"])["elevationIndex"]
             elevation = elevation.astype(np.single)
-            elevation = np.nan_to_num(elevation, nan=22.0)
-            elevation = elevation / 44
+            elevation = np.nan_to_num(elevation, nan=17.0)
+            elevation = elevation / 34
 
         power = scipy.io.loadmat(self.data_dict[idx]["power_path"])["radarCube"]
         power = power.astype(np.single)
@@ -257,7 +257,7 @@ class RADCUBE_DATASET_TIME(Dataset):
                 if reminder != 0:
                     indices = indices[:-reminder]
 
-            #indices = indices[0:100]
+            #indices = indices[0:57]
 
             # get timestamp mapping
             timestamps_path = cubes_dir + '/timestamps.mat'
@@ -355,8 +355,8 @@ class RADCUBE_DATASET_TIME(Dataset):
             if not self.params['bev']:
                 elevation = scipy.io.loadmat(self.data_dict[idx][index]["elevation_path"])["elevationIndex"]
                 elevation = elevation.astype(np.single)
-                elevation = np.nan_to_num(elevation, nan=22.0)
-                elevation = elevation / 44
+                elevation = np.nan_to_num(elevation, nan=17.0)
+                elevation = elevation / 34
 
             power = scipy.io.loadmat(self.data_dict[idx][index]["power_path"])["radarCube"]
 

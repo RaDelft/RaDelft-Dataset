@@ -22,7 +22,7 @@ from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBarTh
 from pytorch_lightning.callbacks import ModelCheckpoint
 from utils.compute_metrics import compute_metrics, compute_pd_pfa
 
-OUT_CLASSES = 44  # 44 elevation angles
+OUT_CLASSES = 34  # 44 elevation angles
 IN_CHANNELS = 64  # output of the ReduceDNet
 
 # ToDO: Check if goes faster with this:
