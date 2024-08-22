@@ -54,10 +54,6 @@ for i_file = 1:(length(fileIdx_unique))
     % Intentionally skip the first frame due to TDA2
     for nFrame= 2:numValidFrames
 
-        if (globalFrameCounter + nFrame -2) < 2207
-            continue
-        end
-
         fprintf('START FRAME PROCESSING: %d \n', nFrame)
 
         % Load one frame of raw data
