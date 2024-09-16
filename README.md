@@ -94,6 +94,8 @@ Only the point clouds for scenes 2 and 6 are provided for the network since scen
 ## Annotation
 Point-by-point semantic labels with four classes (**scenario objects, vehicles, pedestrians, and bicycles**) are generated automatically through the designed automatic labelling process. Generated labels are in the cube format with the same timestamp as the LiDAR point clouds. These labels are stored in the RaDelft dataset hosted in 4TU.ResearchData.
 
+The details of the labelling method are in a paper currently under review for the ICASSP 2025.
+
 ## License
 * The development kit is realeased under the Apache License, Version 2.0, see [here](LICENSE.txt).
 * The dataset can be used by accepting the [Research Use License](LICENSE.md).
