@@ -28,6 +28,9 @@ This repository shares the documentation for the RaDelf dataset as well as the c
 
 ## Changelog
 
+[16-10-2024] Released the new version of the dataset (v5) including labels for classification.
+
+
 ## Introduction
 
 The RaDelft dataset is a large-scale, real-life multi-sensor dataset recorded in various driving scenarios. It provides radar data in different processing levels, synchronised with lidar, camera and odometry.
