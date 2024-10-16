@@ -1,9 +1,9 @@
 function [rangeBins,dopplerBins,azimuthBins] = detOSOSOS2(radarCube)
 
 rGuardCell = 0;
-rTrainCell = 20;
+rTrainCell = 10;
 aGuardCell = 0;
-aTrainCell = 20;
+aTrainCell = 10;
 k = floor((rTrainCell*aTrainCell*4) * 0.75);
 p = 1e-2;
 
