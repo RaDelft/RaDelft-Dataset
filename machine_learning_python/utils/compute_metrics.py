@@ -104,6 +104,8 @@ def compute_metrics_time(params):
             # Load radar point clouds
             cfar = dataset_dict[t]['cfar_path']
             network_output = cfar.replace('radar_ososos', 'network')
+            if not os.path.isfile(network_output):
+                continue
             radarpc = np.load(network_output)
             if radarpc.shape[1] == 4:
                 radarpc = radarpc[:, :-1]           #Remove speed to compute metrics
