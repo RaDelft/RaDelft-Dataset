@@ -118,8 +118,6 @@ If you find the dataset useful in your research, please consider citing it as:
   doi={10.1109/TRS.2024.3485578}}
 
 ```
-<br>
-<br>
 
 ## Links
 - [Original paper](https://ieeexplore-ieee-org.tudelft.idm.oclc.org/document/10731871)
