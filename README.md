@@ -23,7 +23,7 @@ This repository shares the documentation for the RaDelf dataset as well as the c
 - [Annotation](#annotation)
 - [License](#license)
 - [Citation](#citation)
-- [Original paper](Coming Soon)
+- [Links](#links)
 
 
 ## Changelog
@@ -104,6 +104,23 @@ The details of the labelling method are in a paper currently under review for th
 * The dataset can be used by accepting the [Research Use License](LICENSE.md).
 
 ## Citation
-> [!Important]  
->  The paper explaining in detail all the content of the repository is under review at IEEE Transactions on Radar Systems. The pre-print can be found at:
-> https://arxiv.org/abs/2406.04723
+If you find the dataset useful in your research, please consider citing it as:
+
+```
+@ARTICLE{iroldan2024,
+  author={Roldan, Ignacio and Palffy, Andras and Kooij, Julian F. P. and Gavrila, Dariu M. and Fioranelli, Francesco and Yarovoy, Alexander},
+  journal={IEEE Transactions on Radar Systems}, 
+  title={A Deep Automotive Radar Detector Using the RaDelft Dataset}, 
+  year={2024},
+  volume={2},
+  number={},
+  pages={1062-1075},
+  doi={10.1109/TRS.2024.3485578}}
+
+```
+<br>
+<br>
+
+## Links
+- [Original paper](https://ieeexplore-ieee-org.tudelft.idm.oclc.org/document/10731871)
+- [Our research group](https://radar.tudelft.nl/)
