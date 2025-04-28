@@ -317,7 +317,7 @@ def radarcube_lidarcube_loss_time(radarcube, lidarcube, params):
 
     lidarcube = lidarcube.view(batch_size, 500, -1)
     radarcube = radarcube.view(batch_size, 1, 500, -1)
-    metric = smp.losses.FocalLoss('binary', alpha=0.95, gamma=2)
+    metric = smp.losses.FocalLoss('binary', alpha=0.99, gamma=2)
 
     return metric(radarcube, lidarcube)
 
