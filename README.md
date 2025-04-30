@@ -29,6 +29,7 @@ This repository shares the documentation for the RaDelf dataset as well as the c
 ## Changelog
 
 [16-10-2024] Released the new version of the dataset (v5) including labels for classification.
+[30-04-2025] Corrected error in loss hyperparameter *alpha=0.99* in the function *radarcube_lidarcube_loss_time* in *data_preparation/data_preparation.py*.
 
 
 ## Introduction
